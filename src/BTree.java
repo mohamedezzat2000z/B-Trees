@@ -59,7 +59,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
             List<V> lastvalue=new ArrayList<V>();
             List<IBTreeNode<K,V>> secondchilds= new ArrayList<IBTreeNode<K,V>>();
 
-            int mid=tempkeys.size();
+            int mid=tempkeys.size()/2;
             for(int i=0;i< tempkeys.size();i++){
                 if(i<mid){
                     firstkey.add(tempkeys.get(i));
@@ -89,7 +89,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
             right.setKeys(lastkey);
             right.setValues(lastvalue);
             right.setChildren(secondchilds);
-
+          
             if(!transver.isEmpty()){
                 IBTreeNode<K, V> temp2=transver.peek();
                 temp2.setKeys(midkey);
@@ -103,16 +103,19 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                 temp=transver.pop();
             }
             else{
-                IBTreeNode<K, V> root= new BTreeNode<K, V>();
-                root.setKeys(midkey);
-                root.setValues(midvalue);
+                this.root= new BTreeNode<K, V>();
+                this.root.setKeys(midkey);
+                this.root.setValues(midvalue);
+               
                 List<IBTreeNode<K,V>> small= new ArrayList<IBTreeNode<K,V>>();
                 small.add(left);
                 List<IBTreeNode<K,V>> big= new ArrayList<IBTreeNode<K,V>>();
                 big.add(right);
-                root.setChildren(small);
-                root.setChildren(big);
+              
+                this.root.setChildren(small);
+                this.root.setChildren(big);
                 temp=root;
+            
             }
 
         }
@@ -130,4 +133,18 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         return false;
     }
     
+    public void transver(IBTreeNode<K, V> root){
+        List<K> tempkeys=root.getKeys();
+        List<V> tempValue=root.getValues();
+        for(int i=0;i<tempkeys.size();i++){
+            System.out.print("-("+tempkeys.get(i)+","+tempValue.get(i)+") --");
+        }
+        System.out.print(root.getNumOfKeys());
+        List<IBTreeNode<K,V>> tempchilds= root.getChildren();
+        System.out.println("  number of childes"+tempchilds.size());
+        for(int i=0;i<tempchilds.size();i++){
+            transver(tempchilds.get(i));
+        }
+        
+    }
 }
