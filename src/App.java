@@ -14,14 +14,14 @@ public class App {
         T.insert(91,"resign");
         T.insert(84,"crash");
         T.insert(55,"reporter");
-        T.insert(71,"interrupt");
+        T.insert(105,"interrupt");
         T.insert(61,"jealous");
         T.insert(51,"era");
         T.insert(95,"administration");
         T.insert(58,"gap");
         T.insert(101,"fuel");
-        /*T.insert(41,"spell");
-        T.insert(71,"reputation");*/
+        T.insert(41,"spell");
+        T.insert(71,"reputation");
 
         T.transver(T.root);
     }

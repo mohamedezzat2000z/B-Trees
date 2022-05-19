@@ -25,7 +25,6 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         IBTreeNode<K, V> temp=root;
         //System.out.println(temp.isLeaf());
         while(!temp.isLeaf()){
-            
             int i=0;
             List<K> tempkeys= temp.getKeys();
           for(i=0;i< tempkeys.size();i++){
@@ -44,9 +43,10 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         temp.setValues(addValue);
         
         while(temp.getNumOfKeys() == 2*degree-1){
+           
             List<K> tempkeys=temp.getKeys();
             List<V> tempValue=temp.getValues();
-            List<IBTreeNode<K,V>> tempchilds= new ArrayList<IBTreeNode<K,V>>();
+            List<IBTreeNode<K,V>> tempchilds= temp.getChildren();
 
             List<K> firstkey=new ArrayList<K>();
             List<V> firstvalue=new ArrayList<V>();
@@ -60,7 +60,8 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
             List<IBTreeNode<K,V>> secondchilds= new ArrayList<IBTreeNode<K,V>>();
 
             int mid=tempkeys.size()/2;
-            for(int i=0;i< tempkeys.size();i++){
+            int i;
+            for(i=0;i< tempkeys.size();i++){
                 if(i<mid){
                     firstkey.add(tempkeys.get(i));
                     firstvalue.add(tempValue.get(i));
@@ -80,6 +81,9 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                         secondchilds.add(tempchilds.get(i));
                     }
                 }
+            }
+            if(!temp.isLeaf()){
+            secondchilds.add(tempchilds.get(i));
             }
             IBTreeNode<K, V> left= new BTreeNode<K, V>();
             IBTreeNode<K, V> right= new BTreeNode<K, V>();
