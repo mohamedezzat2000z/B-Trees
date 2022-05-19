@@ -181,14 +181,18 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
             return false;
         }
        
+        Boolean removed=false;
        while(temp!=null){
            //case 1 in the leaf
         if(temp.isLeaf())
-        {     
+
+        {   if(!removed){
             List<K> tempkeys = temp.getKeys();
             tempkeys.remove(i);
             List<V> tempval = temp.getValues();
             tempval.remove(i);
+            removed=true;
+            }
             //enought keys in the node
             if(temp.getNumOfKeys()>=degree-1 || temp==this.root){
               return true;
@@ -291,8 +295,35 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
             }
             
         }
-        else if(temp==this.root){
+        else if(temp==this.root && removed){
             return true;
+         }
+         else{
+             if(!removed){
+            transver.add(temp);
+            IBTreeNode<K, V> temp2=temp.getChildren().get(i);
+             while(!temp2.isLeaf()){
+                transver.add(temp2);
+                List<IBTreeNode<K, V>> holder=temp2.getChildren();
+                temp2=holder.get(holder.size()-1);
+             }
+             List<K> tempkeys = temp.getKeys();
+             tempkeys.remove(i);
+             List<V> tempval = temp.getValues();
+             tempval.remove(i);
+             List<K> put= new ArrayList<>();
+             List<V> putV= new ArrayList<>();
+             List<K> tempkeys2 = temp2.getKeys();
+             List<V> tempval2 = temp2.getValues();
+             put.add(tempkeys2.get(tempkeys2.size()-1));
+             putV.add(tempval2.get(tempval2.size()-1));
+             tempkeys2.remove(tempkeys2.size()-1);
+             tempval2.remove(tempval2.size()-1);
+             temp.setKeys(put);
+             temp.setValues(putV);
+             removed=true;
+             temp=temp2;
+            }
          }
     }
         return true;
