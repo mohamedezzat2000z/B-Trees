@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -38,11 +39,22 @@ public class SearchEngine implements ISearchEngine {
         } catch (Exception e) {
             e.printStackTrace();
         }
+=======
+import java.util.List;
+import javax.xml.parsers.*;
+public class SearchEngine implements ISearchEngine {
+
+    @Override
+    public void indexWebPage(String filePath) {
+        // TODO Auto-generated method stub
+
+>>>>>>> 7a4d99bd3289cae2cdbc6ec4d931c9eafd04c7e4
     }
 
     @Override
     public void indexDirectory(String directoryPath) {
         // TODO Auto-generated method stub
+<<<<<<< HEAD
         File directory = new File(directoryPath);
         File[] filesArray = directory.listFiles();
         for (File f : filesArray) {
@@ -52,12 +64,15 @@ public class SearchEngine implements ISearchEngine {
                 this.indexWebPage(f.getAbsolutePath());
             }
         }
+=======
+>>>>>>> 7a4d99bd3289cae2cdbc6ec4d931c9eafd04c7e4
 
     }
 
     @Override
     public void deleteWebPage(String filePath) {
         // TODO Auto-generated method stub
+<<<<<<< HEAD
         File webPage = new File(filePath);
         try {
             Document doc = dBuilder.parse(webPage);
@@ -76,19 +91,27 @@ public class SearchEngine implements ISearchEngine {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+=======
+>>>>>>> 7a4d99bd3289cae2cdbc6ec4d931c9eafd04c7e4
 
     }
 
     @Override
     public List<ISearchResult> searchByWordWithRanking(String word) {
+<<<<<<< HEAD
         List<ISearchResult> searchResults = new ArrayList<ISearchResult>();
         IBTreeNode<Integer, String> root = webPageTree.getRoot();
         appendToResultsList(searchResults, root, word);
         return searchResults;
+=======
+        // TODO Auto-generated method stub
+        return null;
+>>>>>>> 7a4d99bd3289cae2cdbc6ec4d931c9eafd04c7e4
     }
 
     @Override
     public List<ISearchResult> searchByMultipleWordWithRanking(String sentence) {
+<<<<<<< HEAD
         String[] words = sentence.split(" ");
         List<List<ISearchResult>> searchresultsPerWord = new ArrayList<List<ISearchResult>>();
         for (int i = 0; i < words.length; i++) {
@@ -129,3 +152,10 @@ public class SearchEngine implements ISearchEngine {
 
     }
 }
+=======
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+}
+>>>>>>> 7a4d99bd3289cae2cdbc6ec4d931c9eafd04c7e4
