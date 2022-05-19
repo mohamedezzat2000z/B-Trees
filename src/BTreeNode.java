@@ -54,6 +54,10 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
             if (put == false) {
                 this.lastindex = this.keys.size();
                 this.keys.add(keys.get(0));
+                this.last=true;
+            }
+            if(i==0){
+                this.last = false;
             }
         } else if ((this.keys.size() > 0) && (this.keys.get(0).compareTo(keys.get(keys.size() - 1))) > 0) {
             this.last = false;
