@@ -22,7 +22,10 @@ public class App {
         T.insert(101,"fuel");
         T.insert(41,"spell");
         T.insert(71,"reputation");
-
+        T.delete(99);
+        T.delete(105);
+        T.delete(80);
+        T.delete(61);
         T.transver(T.root);
     }
 }

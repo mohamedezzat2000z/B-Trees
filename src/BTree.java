@@ -18,7 +18,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
 
     @Override
     public IBTreeNode<K, V> getRoot() {
-        return root;
+        return this.root;
     }
 
     @Override
@@ -152,8 +152,150 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
 
     @Override
     public boolean delete(K key) {
+        Stack<IBTreeNode<K, V>> transver = new Stack<IBTreeNode<K, V>>();
+        IBTreeNode<K, V> temp = this.root;
+        int i = 0;
+        Boolean found=false;
+        while (temp!=null && !found) {
+            List<K> tempkeys = temp.getKeys();
+            for (i = 0; i < tempkeys.size(); i++) {
+                if (key.compareTo(tempkeys.get(i)) == 0) {
+                   found=true;
+                   break;
+                }
+                if (key.compareTo(tempkeys.get(i)) < 0) {
+                    break;
+                }
+            }
+            if(temp.getChildren().size()>0 && found==false){
+                transver.push(temp);
+                temp = temp.getChildren().get(i);
+            }
+            else if(found==false){
+                temp=null;
+            }
+        }
        
-        return false;
+        if(!found)
+        {
+            return false;
+        }
+       
+       while(temp!=null){
+           //case 1 in the leaf
+        if(temp.isLeaf())
+        {     
+            List<K> tempkeys = temp.getKeys();
+            tempkeys.remove(i);
+            List<V> tempval = temp.getValues();
+            tempval.remove(i);
+            //enought keys in the node
+            if(temp.getNumOfKeys()>=degree-1 || temp==this.root){
+              return true;
+            }
+            else{
+                // finding the postion of the node in the parent pointer list
+                IBTreeNode<K, V> temp2=transver.peek();
+                List<IBTreeNode<K, V>> holder=temp2.getChildren();
+                List<K> tempkeys2 = temp2.getKeys();
+                List<V> tempval2 = temp2.getValues();
+                int x;
+                for(x=0;x<holder.size();x++){
+                    if(holder.get(x)==temp){
+                        break;
+                    }
+                }
+                //borrow from the left sibling
+                if(x>0 && holder.get(x-1).getNumOfKeys() >degree-1){
+                    List<K> put= new ArrayList<>();
+                    put.add(tempkeys2.get(x-1));
+                    List<V> putV= new ArrayList<>();
+                    putV.add(tempval2.get(x-1));
+                    temp.setKeys(put);
+                    temp.setValues(putV);
+                    tempkeys2.remove(x-1);
+                    tempval2.remove(x-1);
+                    put= new ArrayList<>();
+                    putV= new ArrayList<>();
+                    List<K> tempkeys3=holder.get(x-1).getKeys();
+                    List<V> tempval3=holder.get(x-1).getValues();
+                    put.add(tempkeys3.get(tempkeys3.size()-1));
+                    putV.add(tempval3.get(tempkeys3.size()-1));
+                    tempkeys3.remove(tempkeys3.size()-1);
+                    tempval3.remove(tempval3.size()-1);
+                    temp2.setKeys(put);
+                    temp2.setValues(putV);
+                }
+                //borrow from the right sibling
+                else if(x<holder.size()-1 && holder.get(x+1).getNumOfKeys() >degree-1){
+                    List<K> put= new ArrayList<>();
+                    put.add(tempkeys2.get(x));
+                    List<V> putV= new ArrayList<>();
+                    putV.add(tempval2.get(x));
+                    temp.setKeys(put);
+                    temp.setValues(putV);
+                    tempkeys2.remove(x);
+                    tempval2.remove(x);
+                    put= new ArrayList<>();
+                    putV= new ArrayList<>();
+                    List<K> tempkeys3=holder.get(x+1).getKeys();
+                    List<V> tempval3=holder.get(x+1).getValues();
+                    put.add(tempkeys3.get(0));
+                    putV.add(tempval3.get(0));
+                    tempkeys3.remove(0);
+                    tempval3.remove(0);
+                    temp2.setKeys(put);
+                    temp2.setValues(putV);
+                }
+                //merge case
+                else{
+                    //merge with left siblling
+                    if(x>0)
+                    {
+                        List<K> put= new ArrayList<>();
+                        put.add(tempkeys2.get(x-1));
+                        List<V> putV= new ArrayList<>();
+                        putV.add(tempval2.get(x-1));
+                        temp.setKeys(put);
+                        temp.setValues(putV);
+                        tempkeys2.remove(x-1);
+                        tempval2.remove(x-1);
+                        temp.setKeys(holder.get(x-1).getKeys());
+                        temp.setValues(holder.get(x-1).getValues());
+                        temp.setChildren(holder.get(x-1).getChildren());
+                        holder.remove(x-1);
+                    }
+                    //merge with left siblling
+                    else if(x<holder.size()-1)
+                    {
+                        List<K> put= new ArrayList<>();
+                        put.add(tempkeys2.get(x));
+                        List<V> putV= new ArrayList<>();
+                        putV.add(tempval2.get(x));
+                        temp.setKeys(put);
+                        temp.setValues(putV);
+                        tempkeys2.remove(x);
+                        tempval2.remove(x);
+                        temp.setKeys(holder.get(x).getKeys());
+                        temp.setValues(holder.get(x).getValues());
+                        temp.setChildren(holder.get(x).getChildren());
+                        holder.remove(x+1);
+                    }
+                }
+
+                if(!transver.isEmpty()){
+                    temp=transver.pop();
+                }else {
+                    temp=null;
+                }
+            }
+            
+        }
+        else if(temp==this.root){
+            return true;
+         }
+    }
+        return true;
     }
 
 
