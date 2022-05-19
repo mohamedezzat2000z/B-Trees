@@ -5,9 +5,9 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K,V> {
 
     List<K> keys= new ArrayList<K>();
     List<V> value= new ArrayList<V>();
-    BTreeNode<K,V> parent;
     List<IBTreeNode<K,V>> childs= new ArrayList<IBTreeNode<K,V>>();
     int numberOfKeys;
+    int lastindex;
     Boolean last; /*to keep track wherther to put the new array at start or last */
 
     @Override
@@ -40,7 +40,23 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K,V> {
 
     @Override
     public void setKeys(List<K> keys) {
-        if( (this.keys.size() > 0)  &&  ( this.keys.get(0).compareTo(keys.get( keys.size()-1))) > 0 ){
+        if(keys.size()==1){
+            boolean put=false;
+            for(K temp :this.keys){
+                if(keys.get(0).compareTo(temp)<0){
+                    this.lastindex=this.keys.indexOf(temp);
+                    this.keys.add(this.lastindex,keys.get(0));
+                    put=true;
+                    break; 
+                }
+            }
+            if(put=false){
+                this.lastindex=this.keys.size();
+                this.keys.add(keys.get(0));
+                
+            }
+        }
+        else if( (this.keys.size() > 0)  &&  ( this.keys.get(0).compareTo(keys.get( keys.size()-1))) > 0 ){
             this.last=false;
             List<K> temp = keys;
             temp.addAll(this.keys);
@@ -59,7 +75,10 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K,V> {
 
     @Override
     public void setValues(List<V> values) {
-      if(this.last=true){
+     if(values.size()==1){
+            this.value.add(this.lastindex,values.get(0));
+      }
+      else if(this.last=true){
             this.value.addAll(values);
       }else{
         List<V> temp = values;
@@ -76,7 +95,14 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K,V> {
 
     @Override
     public void setChildren(List<IBTreeNode<K, V>> children) {
-        if(this.last=true){
+      if(children.size()==1){
+        if(children.get(0).getKeys().get(0).compareTo(this.keys.get(this.lastindex)) >0){
+                childs.add(this.lastindex+1,children.get(0));
+        }else{
+            childs.add(this.lastindex,children.get(0));
+        }
+      }
+      else if(this.last=true){
             this.childs.addAll(children);
       }else{
         List<IBTreeNode<K, V>> temp = children;

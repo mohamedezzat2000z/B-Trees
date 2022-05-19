@@ -1,15 +1,19 @@
 public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
 
+    IBTreeNode<K, V> root= new BTreeNode<K, V>();
+    int degree;
+    BTree(int degree){
+        this.degree=degree;
+    }
     @Override
     public int getMinimumDegree() {
-        // TODO Auto-generated method stub
-        return 0;
+
+        return this.degree;
     }
 
     @Override
     public IBTreeNode<K, V> getRoot() {
-        // TODO Auto-generated method stub
-        return null;
+        return root;
     }
 
     @Override
