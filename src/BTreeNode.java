@@ -23,9 +23,9 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K,V> {
     @Override
     public boolean isLeaf() {
         if(childs.size()>0){
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override

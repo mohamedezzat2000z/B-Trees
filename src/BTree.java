@@ -23,7 +23,9 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
     public void insert(K key, V value) {
         Stack<IBTreeNode<K, V>> transver= new Stack<IBTreeNode<K, V>>();
         IBTreeNode<K, V> temp=root;
+        //System.out.println(temp.isLeaf());
         while(!temp.isLeaf()){
+            
             int i=0;
             List<K> tempkeys= temp.getKeys();
           for(i=0;i< tempkeys.size();i++){
@@ -110,6 +112,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                 big.add(right);
                 root.setChildren(small);
                 root.setChildren(big);
+                temp=root;
             }
 
         }
