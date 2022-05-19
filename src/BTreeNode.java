@@ -41,16 +41,17 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K,V> {
     @Override
     public void setKeys(List<K> keys) {
         if(keys.size()==1){
-            boolean put=false;
-            for(K temp :this.keys){
-                if(keys.get(0).compareTo(temp)<0){
-                    this.lastindex=this.keys.indexOf(temp);
-                    this.keys.add(this.lastindex,keys.get(0));
+            Boolean put=false;
+            int i=0;
+            for(i=0;i<this.keys.size();i++){
+                if(keys.get(0).compareTo(this.keys.get(i))<0){
+                    this.lastindex=i;
+                    this.keys.add(i,keys.get(0));
                     put=true;
                     break; 
                 }
             }
-            if(put=false){
+            if(put==false){
                 this.lastindex=this.keys.size();
                 this.keys.add(keys.get(0));
                 
@@ -99,6 +100,9 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K,V> {
         if(children.get(0).getKeys().get(0).compareTo(this.keys.get(this.lastindex)) >0){
                 childs.add(this.lastindex+1,children.get(0));
         }else{
+            if(childs.size()>0){
+            childs.remove(this.lastindex);
+            }
             childs.add(this.lastindex,children.get(0));
         }
       }
