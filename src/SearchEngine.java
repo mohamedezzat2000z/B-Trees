@@ -24,17 +24,16 @@ public class SearchEngine implements ISearchEngine {
         File webPage = new File(filePath);
         try {
             Document doc = dBuilder.parse(webPage);
-            // IBTreeNode node =
             doc.getDocumentElement().normalize();
             NodeList nList = doc.getElementsByTagName("doc");
             for (int i = 0; i < nList.getLength(); i++) {
                 Node node = nList.item(i);
                 Element e = (Element) node;
                 Integer articleID = Integer.valueOf(Integer.parseInt(e.getAttribute("id")));
-                // System.out.println(e.getTextContent());
                 webPageTree.insert(articleID, e.getTextContent());
-
+                // System.out.print(webPageTree.search(articleID));
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -42,7 +41,7 @@ public class SearchEngine implements ISearchEngine {
 
     @Override
     public void indexDirectory(String directoryPath) {
-        // TODO Auto-generated method stub
+       
         File directory = new File(directoryPath);
         File[] filesArray = directory.listFiles();
         for (File f : filesArray) {
@@ -57,7 +56,7 @@ public class SearchEngine implements ISearchEngine {
 
     @Override
     public void deleteWebPage(String filePath) {
-        // TODO Auto-generated method stub
+        
         File webPage = new File(filePath);
         try {
             Document doc = dBuilder.parse(webPage);
@@ -73,7 +72,6 @@ public class SearchEngine implements ISearchEngine {
             }
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -115,25 +113,27 @@ public class SearchEngine implements ISearchEngine {
     private void appendToResultsList(List<ISearchResult> list, IBTreeNode<Integer, String> root, String word) {
 
         List<IBTreeNode<Integer, String>> rootchildren = root.getChildren();
+
         List<String> values = root.getValues();
         List<Integer> keys = root.getKeys();
-
-        for (int i = 0; i < values.size(); i++) {
-            if (values.get(i).contains(word)) {
-                Pattern p = Pattern.compile(word);
-                Matcher m = p.matcher(values.get(i));
-                int count = 0;
-                while (m.find())
-                    count += 1;
-                ISearchResult res = new SearchResult();
-                res.setId(keys.get(i).toString());
-                res.setRank(count);
-                list.add(res);
+        if (!(rootchildren.isEmpty())) {
+            for (int i = 0; i < rootchildren.size() - 1; i++) {
+                appendToResultsList(list, rootchildren.get(i), word);
             }
         }
-        for (int i = 0; i < rootchildren.size(); i++) {
-            appendToResultsList(list, rootchildren.get(i), word);
+        for (int i = 0; i < values.size(); i++) {
+            Pattern p = Pattern.compile(word);
+            Matcher m = p.matcher(values.get(i));
+            int count = 0;
+            while (m.find())
+                count += 1;
+            ISearchResult res = new SearchResult();
+            res.setId(keys.get(i).toString());
+            res.setRank(count);
+            list.add(res);
         }
+        if (rootchildren.size() - 1 > 0)
+            appendToResultsList(list, rootchildren.get(rootchildren.size() - 1), word);
 
     }
 }
