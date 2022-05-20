@@ -100,7 +100,7 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
             if (children.get(0).getKeys().get(0).compareTo(this.keys.get(this.lastindex)) > 0) {
                 childs.add(this.lastindex + 1, children.get(0));
             } else {
-                if (childs.size() > 0) {
+                if (childs.size() > 0 && this.numberOfKeys>= keys.size()) {
                     childs.remove(this.lastindex);
                 }
                 childs.add(this.lastindex, children.get(0));

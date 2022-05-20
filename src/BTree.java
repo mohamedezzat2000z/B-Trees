@@ -44,9 +44,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         addValue.add(value);
         temp.setKeys(addkey);
         temp.setValues(addValue);
-        if(){
-            
-        }
+        temp.setNumOfKeys(temp.getNumOfKeys());
         while (temp.getNumOfKeys() > 2 * degree - 1) {
 
             List<K> tempkeys = temp.getKeys();
@@ -98,7 +96,8 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
             right.setKeys(lastkey);
             right.setValues(lastvalue);
             right.setChildren(secondchilds);
-
+            left.setNumOfKeys(left.getNumOfKeys());
+            right.setNumOfKeys(right.getNumOfKeys());
             if (!transver.isEmpty()) {
                 IBTreeNode<K, V> temp2 = transver.peek();
                 temp2.setKeys(midkey);
@@ -109,6 +108,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                 big.add(right);
                 temp2.setChildren(small);
                 temp2.setChildren(big);
+                temp2.setNumOfKeys(temp2.getNumOfKeys());
                 temp = transver.pop();
             } else {
                 this.root = new BTreeNode<K, V>();
@@ -122,7 +122,8 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
 
                 this.root.setChildren(small);
                 this.root.setChildren(big);
-                temp = root;
+                this.root.setNumOfKeys(this.root.getNumOfKeys());
+                temp = this.root;
 
             }
 
@@ -363,7 +364,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                         temp2.setKeys(put);
                         temp2.setValues(putV);
                         putC.add(holder2.get(holder2.size() - 1));
-                        temp2.setChildren(putC);
+                        temp.setChildren(putC);
                         holder2.remove(holder2.size() - 1);
 
                     }
@@ -392,7 +393,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                         temp2.setKeys(put);
                         temp2.setValues(putV);
                         putC.add(holder2.get(0));
-                        temp2.setChildren(putC);
+                        temp.setChildren(putC);
                         holder2.remove(0);
 
                     }
