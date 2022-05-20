@@ -1,5 +1,5 @@
-<<<<<<< HEAD
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 import java.util.regex.*;
@@ -39,22 +39,11 @@ public class SearchEngine implements ISearchEngine {
         } catch (Exception e) {
             e.printStackTrace();
         }
-=======
-import java.util.List;
-import javax.xml.parsers.*;
-public class SearchEngine implements ISearchEngine {
-
-    @Override
-    public void indexWebPage(String filePath) {
-        // TODO Auto-generated method stub
-
->>>>>>> 7a4d99bd3289cae2cdbc6ec4d931c9eafd04c7e4
     }
 
     @Override
     public void indexDirectory(String directoryPath) {
         // TODO Auto-generated method stub
-<<<<<<< HEAD
         File directory = new File(directoryPath);
         File[] filesArray = directory.listFiles();
         for (File f : filesArray) {
@@ -64,15 +53,12 @@ public class SearchEngine implements ISearchEngine {
                 this.indexWebPage(f.getAbsolutePath());
             }
         }
-=======
->>>>>>> 7a4d99bd3289cae2cdbc6ec4d931c9eafd04c7e4
 
     }
 
     @Override
     public void deleteWebPage(String filePath) {
         // TODO Auto-generated method stub
-<<<<<<< HEAD
         File webPage = new File(filePath);
         try {
             Document doc = dBuilder.parse(webPage);
@@ -91,40 +77,40 @@ public class SearchEngine implements ISearchEngine {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-=======
->>>>>>> 7a4d99bd3289cae2cdbc6ec4d931c9eafd04c7e4
 
     }
 
     @Override
     public List<ISearchResult> searchByWordWithRanking(String word) {
-<<<<<<< HEAD
         List<ISearchResult> searchResults = new ArrayList<ISearchResult>();
         IBTreeNode<Integer, String> root = webPageTree.getRoot();
         appendToResultsList(searchResults, root, word);
         return searchResults;
-=======
-        // TODO Auto-generated method stub
-        return null;
->>>>>>> 7a4d99bd3289cae2cdbc6ec4d931c9eafd04c7e4
     }
 
     @Override
     public List<ISearchResult> searchByMultipleWordWithRanking(String sentence) {
-<<<<<<< HEAD
         String[] words = sentence.split(" ");
         List<List<ISearchResult>> searchresultsPerWord = new ArrayList<List<ISearchResult>>();
+        List<ISearchResult> finalResults = new ArrayList<ISearchResult>();
         for (int i = 0; i < words.length; i++) {
             searchresultsPerWord.add(searchByWordWithRanking(words[i]));
         }
         for (int i = 0; i < searchresultsPerWord.get(0).size(); i++) {
-            int[] frequencies = new int[searchresultsPerWord.get(0).size()];
+            int[] frequencies = new int[searchresultsPerWord.size()];
+            String currentID = searchresultsPerWord.get(0).get(i).getId();
+            int minFreq = 0;
             for (int j = 0; j < searchresultsPerWord.size(); j++) {
-
-                searchresultsPerWord.get(j).get(i);
+                frequencies[j] = searchresultsPerWord.get(j).get(i).getRank();
             }
+            Arrays.sort(frequencies);
+            minFreq = frequencies[0];
+            ISearchResult s = new SearchResult();
+            s.setId(currentID);
+            s.setRank(minFreq);
+            finalResults.add(s);
         }
-        return null;
+        return finalResults;
     }
 
     private void appendToResultsList(List<ISearchResult> list, IBTreeNode<Integer, String> root, String word) {
@@ -152,10 +138,3 @@ public class SearchEngine implements ISearchEngine {
 
     }
 }
-=======
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-}
->>>>>>> 7a4d99bd3289cae2cdbc6ec4d931c9eafd04c7e4
