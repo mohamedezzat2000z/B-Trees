@@ -23,7 +23,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
 
     @Override
     public void insert(K key, V value) {
-        if(search(key)!=null)
+        if (search(key) != null)
             return;
         Stack<IBTreeNode<K, V>> transver = new Stack<IBTreeNode<K, V>>();
         IBTreeNode<K, V> temp = this.root;
@@ -44,7 +44,9 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         addValue.add(value);
         temp.setKeys(addkey);
         temp.setValues(addValue);
-
+        if(){
+            
+        }
         while (temp.getNumOfKeys() > 2 * degree - 1) {
 
             List<K> tempkeys = temp.getKeys();
@@ -130,7 +132,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
     @Override
     public V search(K key) {
         IBTreeNode<K, V> temp = this.root;
-        while (temp!=null) {
+        while (temp != null) {
             int i = 0;
             List<K> tempkeys = temp.getKeys();
             for (i = 0; i < tempkeys.size(); i++) {
@@ -141,10 +143,10 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                     break;
                 }
             }
-            if(temp.getChildren().size()>0){
-            temp = temp.getChildren().get(i);
-            }else{
-                temp=null;
+            if (temp.getChildren().size() > 0) {
+                temp = temp.getChildren().get(i);
+            } else {
+                temp = null;
             }
         }
         return null;
@@ -155,182 +157,298 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         Stack<IBTreeNode<K, V>> transver = new Stack<IBTreeNode<K, V>>();
         IBTreeNode<K, V> temp = this.root;
         int i = 0;
-        Boolean found=false;
-        while (temp!=null && !found) {
+        Boolean found = false;
+        System.out.println(key + " start");
+        while (temp != null && !found) {
             List<K> tempkeys = temp.getKeys();
             for (i = 0; i < tempkeys.size(); i++) {
                 if (key.compareTo(tempkeys.get(i)) == 0) {
-                   found=true;
-                   break;
+                    found = true;
+                    break;
                 }
                 if (key.compareTo(tempkeys.get(i)) < 0) {
                     break;
                 }
             }
-            if(temp.getChildren().size()>0 && found==false){
+            if (temp.getChildren().size() > 0 && found == false) {
                 transver.push(temp);
+                System.out.println(temp.isLeaf());
                 temp = temp.getChildren().get(i);
-            }
-            else if(found==false){
-                temp=null;
+            } else if (found == false) {
+                temp = null;
             }
         }
-       
-        if(!found)
-        {
+
+        if (!found) {
             return false;
         }
-       
-        Boolean removed=false;
-       while(temp!=null){
-           //case 1 in the leaf
-        if(temp.isLeaf())
 
-        {   if(!removed){
-            List<K> tempkeys = temp.getKeys();
-            tempkeys.remove(i);
-            List<V> tempval = temp.getValues();
-            tempval.remove(i);
-            removed=true;
-            }
-            //enought keys in the node
-            if(temp.getNumOfKeys()>=degree-1 || temp==this.root){
-              return true;
-            }
-            else{
-                // finding the postion of the node in the parent pointer list
-                IBTreeNode<K, V> temp2=transver.peek();
-                List<IBTreeNode<K, V>> holder=temp2.getChildren();
-                List<K> tempkeys2 = temp2.getKeys();
-                List<V> tempval2 = temp2.getValues();
-                int x;
-                for(x=0;x<holder.size();x++){
-                    if(holder.get(x)==temp){
-                        break;
+        Boolean removed = false;
+        while (temp != null) {
+            // case 1 in the leaf
+
+            if (temp.isLeaf()) {
+                if (!removed) {
+                    List<K> tempkeys = temp.getKeys();
+                    tempkeys.remove(i);
+                    List<V> tempval = temp.getValues();
+                    tempval.remove(i);
+                    removed = true;
+                }
+                // enought keys in the node
+                if (temp.getNumOfKeys() >= degree - 1 || temp == this.root) {
+                    return true;
+                } else {
+                    // finding the postion of the node in the parent pointer list
+                    IBTreeNode<K, V> temp2 = transver.peek();
+                    List<IBTreeNode<K, V>> holder = temp2.getChildren();
+                    List<K> tempkeys2 = temp2.getKeys();
+                    List<V> tempval2 = temp2.getValues();
+                    int x;
+                    for (x = 0; x < holder.size(); x++) {
+                        if (holder.get(x) == temp) {
+                            break;
+                        }
                     }
-                }
-                //borrow from the left sibling
-                if(x>0 && holder.get(x-1).getNumOfKeys() >degree-1){
-                    List<K> put= new ArrayList<>();
-                    put.add(tempkeys2.get(x-1));
-                    List<V> putV= new ArrayList<>();
-                    putV.add(tempval2.get(x-1));
-                    temp.setKeys(put);
-                    temp.setValues(putV);
-                    tempkeys2.remove(x-1);
-                    tempval2.remove(x-1);
-                    put= new ArrayList<>();
-                    putV= new ArrayList<>();
-                    List<K> tempkeys3=holder.get(x-1).getKeys();
-                    List<V> tempval3=holder.get(x-1).getValues();
-                    put.add(tempkeys3.get(tempkeys3.size()-1));
-                    putV.add(tempval3.get(tempkeys3.size()-1));
-                    tempkeys3.remove(tempkeys3.size()-1);
-                    tempval3.remove(tempval3.size()-1);
-                    temp2.setKeys(put);
-                    temp2.setValues(putV);
-                }
-                //borrow from the right sibling
-                else if(x<holder.size()-1 && holder.get(x+1).getNumOfKeys() >degree-1){
-                    List<K> put= new ArrayList<>();
-                    put.add(tempkeys2.get(x));
-                    List<V> putV= new ArrayList<>();
-                    putV.add(tempval2.get(x));
-                    temp.setKeys(put);
-                    temp.setValues(putV);
-                    tempkeys2.remove(x);
-                    tempval2.remove(x);
-                    put= new ArrayList<>();
-                    putV= new ArrayList<>();
-                    List<K> tempkeys3=holder.get(x+1).getKeys();
-                    List<V> tempval3=holder.get(x+1).getValues();
-                    put.add(tempkeys3.get(0));
-                    putV.add(tempval3.get(0));
-                    tempkeys3.remove(0);
-                    tempval3.remove(0);
-                    temp2.setKeys(put);
-                    temp2.setValues(putV);
-                }
-                //merge case
-                else{
-                    //merge with left siblling
-                    if(x>0)
-                    {
-                        List<K> put= new ArrayList<>();
-                        put.add(tempkeys2.get(x-1));
-                        List<V> putV= new ArrayList<>();
-                        putV.add(tempval2.get(x-1));
+                    // borrow from the left sibling
+                    if (x > 0 && holder.get(x - 1).getNumOfKeys() > degree - 1) {
+                        List<K> put = new ArrayList<>();
+                        put.add(tempkeys2.get(x - 1));
+                        List<V> putV = new ArrayList<>();
+                        putV.add(tempval2.get(x - 1));
                         temp.setKeys(put);
                         temp.setValues(putV);
-                        tempkeys2.remove(x-1);
-                        tempval2.remove(x-1);
-                        temp.setKeys(holder.get(x-1).getKeys());
-                        temp.setValues(holder.get(x-1).getValues());
-                        temp.setChildren(holder.get(x-1).getChildren());
-                        holder.remove(x-1);
+                        tempkeys2.remove(x - 1);
+                        tempval2.remove(x - 1);
+                        put = new ArrayList<>();
+                        putV = new ArrayList<>();
+                        List<K> tempkeys3 = holder.get(x - 1).getKeys();
+                        List<V> tempval3 = holder.get(x - 1).getValues();
+                        put.add(tempkeys3.get(tempkeys3.size() - 1));
+                        putV.add(tempval3.get(tempkeys3.size() - 1));
+                        tempkeys3.remove(tempkeys3.size() - 1);
+                        tempval3.remove(tempval3.size() - 1);
+                        temp2.setKeys(put);
+                        temp2.setValues(putV);
                     }
-                    //merge with left siblling
-                    else if(x<holder.size()-1)
-                    {
-                        List<K> put= new ArrayList<>();
+                    // borrow from the right sibling
+                    else if (x < holder.size() - 1 && holder.get(x + 1).getNumOfKeys() > degree - 1) {
+                        List<K> put = new ArrayList<>();
                         put.add(tempkeys2.get(x));
-                        List<V> putV= new ArrayList<>();
+                        List<V> putV = new ArrayList<>();
                         putV.add(tempval2.get(x));
                         temp.setKeys(put);
                         temp.setValues(putV);
                         tempkeys2.remove(x);
                         tempval2.remove(x);
-                        temp.setKeys(holder.get(x).getKeys());
-                        temp.setValues(holder.get(x).getValues());
-                        temp.setChildren(holder.get(x).getChildren());
-                        holder.remove(x+1);
+                        put = new ArrayList<>();
+                        putV = new ArrayList<>();
+                        List<K> tempkeys3 = holder.get(x + 1).getKeys();
+                        List<V> tempval3 = holder.get(x + 1).getValues();
+                        put.add(tempkeys3.get(0));
+                        putV.add(tempval3.get(0));
+                        tempkeys3.remove(0);
+                        tempval3.remove(0);
+                        temp2.setKeys(put);
+                        temp2.setValues(putV);
+                    }
+                    // merge case
+                    else {
+                        // merge with left siblling
+                        if (x > 0) {
+                            List<K> put = new ArrayList<>();
+                            put.add(tempkeys2.get(x - 1));
+                            List<V> putV = new ArrayList<>();
+                            putV.add(tempval2.get(x - 1));
+                            temp.setKeys(put);
+                            temp.setValues(putV);
+                            tempkeys2.remove(x - 1);
+                            tempval2.remove(x - 1);
+                            temp.setKeys(holder.get(x - 1).getKeys());
+                            temp.setValues(holder.get(x - 1).getValues());
+                            temp.setChildren(holder.get(x - 1).getChildren());
+                            holder.remove(x - 1);
+                        }
+                        // merge with left siblling
+                        else if (x < holder.size() - 1) {
+                            List<K> put = new ArrayList<>();
+                            put.add(tempkeys2.get(x));
+                            List<V> putV = new ArrayList<>();
+                            putV.add(tempval2.get(x));
+                            temp.setKeys(put);
+                            temp.setValues(putV);
+                            tempkeys2.remove(x);
+                            tempval2.remove(x);
+                            temp.setKeys(holder.get(x).getKeys());
+                            temp.setValues(holder.get(x).getValues());
+                            temp.setChildren(holder.get(x).getChildren());
+                            holder.remove(x + 1);
+                        }
+                    }
+
+                    if (!transver.isEmpty()) {
+                        temp = transver.pop();
+                    } else {
+                        temp = null;
                     }
                 }
 
-                if(!transver.isEmpty()){
-                    temp=transver.pop();
-                }else {
-                    temp=null;
+            } else if (temp == this.root && removed) {
+                return true;
+            } else {
+
+                if (!removed) {
+                    transver.add(temp);
+                    IBTreeNode<K, V> temp2 = temp.getChildren().get(i);
+                    while (!temp2.isLeaf()) {
+                        transver.add(temp2);
+                        List<IBTreeNode<K, V>> holder = temp2.getChildren();
+                        temp2 = holder.get(holder.size() - 1);
+                    }
+                    List<K> tempkeys = temp.getKeys();
+                    tempkeys.remove(i);
+                    List<V> tempval = temp.getValues();
+                    tempval.remove(i);
+                    List<K> put = new ArrayList<>();
+                    List<V> putV = new ArrayList<>();
+                    List<K> tempkeys2 = temp2.getKeys();
+                    List<V> tempval2 = temp2.getValues();
+                    put.add(tempkeys2.get(tempkeys2.size() - 1));
+                    putV.add(tempval2.get(tempval2.size() - 1));
+                    tempkeys2.remove(tempkeys2.size() - 1);
+                    tempval2.remove(tempval2.size() - 1);
+                    temp.setKeys(put);
+                    temp.setValues(putV);
+                    removed = true;
+                    temp = temp2;
+                } else if (temp.getNumOfKeys() < degree - 1) {
+                    // finding the postion of the node in the parent pointer list
+
+                    IBTreeNode<K, V> temp2 = transver.peek();
+                    System.out
+                            .println(key + "special" + temp.getNumOfKeys() + " number of" + temp.getChildren().size());
+                    System.out.println(temp2.getNumOfKeys() + " number of" + temp2.getChildren().size());
+                    List<IBTreeNode<K, V>> holder = temp2.getChildren();
+                    List<K> tempkeys2 = temp2.getKeys();
+                    List<V> tempval2 = temp2.getValues();
+                    int x;
+                    for (x = 0; x < holder.size(); x++) {
+                        if (holder.get(x) == temp) {
+                            break;
+                        }
+                    }
+                    // borrow from the left sibling
+                    if (x > 0 && holder.get(x - 1).getNumOfKeys() > degree - 1) {
+                        System.out.println(key + "boorw left");
+                        List<K> put = new ArrayList<>();
+                        put.add(tempkeys2.get(x - 1));
+                        List<V> putV = new ArrayList<>();
+                        putV.add(tempval2.get(x - 1));
+                        temp.setKeys(put);
+                        temp.setValues(putV);
+                        tempkeys2.remove(x - 1);
+                        tempval2.remove(x - 1);
+                        put = new ArrayList<>();
+                        putV = new ArrayList<>();
+                        IBTreeNode<K, V> temp3 = holder.get(x - 1);
+                        List<IBTreeNode<K, V>> holder2 = temp3.getChildren();
+                        List<IBTreeNode<K, V>> putC = new ArrayList<IBTreeNode<K, V>>();
+                        List<K> tempkeys3 = temp3.getKeys();
+                        List<V> tempval3 = temp3.getValues();
+                        put.add(tempkeys3.get(tempkeys3.size() - 1));
+                        putV.add(tempval3.get(tempkeys3.size() - 1));
+                        tempkeys3.remove(tempkeys3.size() - 1);
+                        tempval3.remove(tempval3.size() - 1);
+                        holder2.remove(holder2.size() - 1);
+                        temp2.setKeys(put);
+                        temp2.setValues(putV);
+                        putC.add(holder2.get(holder2.size() - 1));
+                        temp2.setChildren(putC);
+                        holder2.remove(holder2.size() - 1);
+
+                    }
+                    // borrow from the right sibling
+                    else if (x < holder.size() - 1 && holder.get(x + 1).getNumOfKeys() > degree - 1) {
+                        System.out.println(key + "boorw right");
+                        List<K> put = new ArrayList<>();
+                        put.add(tempkeys2.get(x));
+                        List<V> putV = new ArrayList<>();
+                        putV.add(tempval2.get(x));
+                        temp.setKeys(put);
+                        temp.setValues(putV);
+                        tempkeys2.remove(x);
+                        tempval2.remove(x);
+                        put = new ArrayList<>();
+                        putV = new ArrayList<>();
+                        IBTreeNode<K, V> temp3 = holder.get(x + 1);
+                        List<IBTreeNode<K, V>> holder2 = temp3.getChildren();
+                        List<IBTreeNode<K, V>> putC = new ArrayList<IBTreeNode<K, V>>();
+                        List<K> tempkeys3 = temp3.getKeys();
+                        List<V> tempval3 = temp3.getValues();
+                        put.add(tempkeys3.get(0));
+                        putV.add(tempval3.get(0));
+                        tempkeys3.remove(0);
+                        tempval3.remove(0);
+                        temp2.setKeys(put);
+                        temp2.setValues(putV);
+                        putC.add(holder2.get(0));
+                        temp2.setChildren(putC);
+                        holder2.remove(0);
+
+                    }
+                    // merge case
+                    else {
+                        System.out.println(key + "mergeing");
+                        // temp = null;
+                        // merge with left siblling
+                        if (x > 0) {
+                            List<K> put = new ArrayList<>();
+                            put.add(tempkeys2.get(x - 1));
+                            List<V> putV = new ArrayList<>();
+                            putV.add(tempval2.get(x - 1));
+                            temp.setKeys(put);
+                            temp.setValues(putV);
+                            tempkeys2.remove(x - 1);
+                            tempval2.remove(x - 1);
+                            temp.setKeys(holder.get(x - 1).getKeys());
+                            temp.setValues(holder.get(x - 1).getValues());
+                            temp.setChildren(holder.get(x - 1).getChildren());
+                            holder.remove(x - 1);
+                        }
+                        // merge with left siblling
+                        else if (x < holder.size() - 1) {
+                            List<K> put = new ArrayList<>();
+                            put.add(tempkeys2.get(x));
+                            List<V> putV = new ArrayList<>();
+                            putV.add(tempval2.get(x));
+                            temp.setKeys(put);
+                            temp.setValues(putV);
+                            tempkeys2.remove(x);
+                            tempval2.remove(x);
+                            temp.setKeys(holder.get(x).getKeys());
+                            temp.setValues(holder.get(x).getValues());
+                            temp.setChildren(holder.get(x).getChildren());
+                            holder.remove(x + 1);
+                        }
+
+                    }
+
+                    if (!transver.isEmpty()) {
+                        temp = transver.pop();
+                    } else {
+                        temp = null;
+                    }
+
+                    System.out
+                            .println(key + "special2" + temp.getNumOfKeys() + " number of" + temp.getChildren().size());
+                    System.out.println(temp2.getNumOfKeys() + " number of" + temp2.getChildren().size());
+                } else {
+                    temp = null;
                 }
             }
-            
         }
-        else if(temp==this.root && removed){
-            return true;
-         }
-         else{
-             if(!removed){
-            transver.add(temp);
-            IBTreeNode<K, V> temp2=temp.getChildren().get(i);
-             while(!temp2.isLeaf()){
-                transver.add(temp2);
-                List<IBTreeNode<K, V>> holder=temp2.getChildren();
-                temp2=holder.get(holder.size()-1);
-             }
-             List<K> tempkeys = temp.getKeys();
-             tempkeys.remove(i);
-             List<V> tempval = temp.getValues();
-             tempval.remove(i);
-             List<K> put= new ArrayList<>();
-             List<V> putV= new ArrayList<>();
-             List<K> tempkeys2 = temp2.getKeys();
-             List<V> tempval2 = temp2.getValues();
-             put.add(tempkeys2.get(tempkeys2.size()-1));
-             putV.add(tempval2.get(tempval2.size()-1));
-             tempkeys2.remove(tempkeys2.size()-1);
-             tempval2.remove(tempval2.size()-1);
-             temp.setKeys(put);
-             temp.setValues(putV);
-             removed=true;
-             temp=temp2;
-            }
-         }
-    }
         return true;
     }
-
-
-
 
     public void transver(IBTreeNode<K, V> root) {
         List<K> tempkeys = root.getKeys();
