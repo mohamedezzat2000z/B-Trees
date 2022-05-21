@@ -39,10 +39,10 @@ public class BtreeBenchmark {
     String[] value = new String[size];
     long[] time = new long[10];
     long[] time2 = new long[10];
-  //  for (int i = 0; i < 10; i++) {
+   for (int i = 0; i < 10; i++) {
       BTree<Integer, String> dummy = new BTree<Integer, String>(3);
       for (int j = 0; j < size; j++) {
-        key[j] = Integer.valueOf((int) Math.floor(Math.random() * (50000 + 1) + 1));
+        key[j] = Integer.valueOf((int) Math.floor(Math.random() * (2147483647 + 1) + 1));
         value[j] = getAlphaNumericString();
       }
 
@@ -51,21 +51,16 @@ public class BtreeBenchmark {
         dummy.insert(key[j], value[j]);
       }
       long endtime = System.nanoTime();
-     // time[i] = endtime - startTime;
-     // System.out.println("new one");
-      //dummy.transver(dummy.root);
+
+      time[i] = endtime - startTime;
+
       startTime = System.nanoTime();
       for (int j = 0; j < size; j++) {
-        if(dummy.delete(key[j])==false){
-          System.out.println("fail");
-        }
-        //dummy.delete(key[j]);
-        System.out.println("new one  "+key[j]);
-        dummy.transver(dummy.root);
+        dummy.delete(key[j]);
       }
       endtime = System.nanoTime();
-      //time2[i] = endtime - startTime;
-    //}
+      time2[i] = endtime - startTime;
+    }
 
     try {
       System.out.println("here");

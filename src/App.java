@@ -22,7 +22,7 @@ public class App {
          * r.getRank());
          * }
          */
-         BtreeBenchmark.benchTree(35, "bench 50");
+         BtreeBenchmark.benchTree(1000000, "bench 50");
         //SearchEngineBenchmark.benchSearch("is", "is not a sign", "bench is");
 
     }

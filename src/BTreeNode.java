@@ -67,6 +67,7 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
             this.keys.addAll(keys);
             this.last = true;
         }
+        
 
     }
 
@@ -79,14 +80,14 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
     public void setValues(List<V> values) {
         if (values.size() == 1) {
             this.value.add(this.lastindex, values.get(0));
-        } else if (this.last = true) {
-            System.out.println(last);
+        } else if (this.last == true) {
             this.value.addAll(values);
         } else {
             List<V> temp = values;
             temp.addAll(this.value);
             this.value = temp;
         }
+
 
     }
 
@@ -110,13 +111,14 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
                 }
                 this.childs.add(this.lastindex, children.get(0));
             }
-        } else if (this.last = true) {
+        } else if (this.last == true) {
             this.childs.addAll(children);
         } else {
             List<IBTreeNode<K, V>> temp = children;
             temp.addAll(this.childs);
             this.childs = temp;
         }
+
     }
 
 }
