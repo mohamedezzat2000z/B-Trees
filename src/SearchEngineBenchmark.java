@@ -26,7 +26,7 @@ public class SearchEngineBenchmark {
         }
 
         try {
-            FileWriter csvWriter = new FileWriter("./benches/" + sent + ".csv");
+            FileWriter csvWriter = new FileWriter("./benchSearch/" + sent + ".csv");
             csvWriter.append("trial number");
             csvWriter.append(",");
             for (int i = 0; i < 10; i++) {

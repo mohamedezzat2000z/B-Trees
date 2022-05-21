@@ -41,7 +41,7 @@ public class SearchEngine implements ISearchEngine {
 
     @Override
     public void indexDirectory(String directoryPath) {
-       
+
         File directory = new File(directoryPath);
         File[] filesArray = directory.listFiles();
         for (File f : filesArray) {
@@ -56,7 +56,7 @@ public class SearchEngine implements ISearchEngine {
 
     @Override
     public void deleteWebPage(String filePath) {
-        
+
         File webPage = new File(filePath);
         try {
             Document doc = dBuilder.parse(webPage);
@@ -122,8 +122,8 @@ public class SearchEngine implements ISearchEngine {
             }
         }
         for (int i = 0; i < values.size(); i++) {
-            Pattern p = Pattern.compile(word);
-            Matcher m = p.matcher(values.get(i));
+            Pattern p = Pattern.compile(word.toLowerCase());
+            Matcher m = p.matcher(values.get(i).toLowerCase());
             int count = 0;
             while (m.find())
                 count += 1;

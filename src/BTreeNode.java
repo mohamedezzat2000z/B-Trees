@@ -53,9 +53,9 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
             if (put == false) {
                 this.lastindex = this.keys.size();
                 this.keys.add(keys.get(0));
-                this.last=true;
+                this.last = true;
             }
-            if(i==0){
+            if (i == 0) {
                 this.last = false;
             }
         } else if ((this.keys.size() > 0) && (this.keys.get(0).compareTo(keys.get(keys.size() - 1))) > 0) {
@@ -80,7 +80,7 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
         if (values.size() == 1) {
             this.value.add(this.lastindex, values.get(0));
         } else if (this.last = true) {
-            System.out.println(last);
+            // System.out.println(last);
             this.value.addAll(values);
         } else {
             List<V> temp = values;
@@ -100,12 +100,10 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
         if (children.size() == 1) {
             if (children.get(0).getKeys().get(0).compareTo(this.keys.get(this.lastindex)) > 0 && childs.size() > 0) {
                 this.childs.add(this.lastindex + 1, children.get(0));
-            }
-            else if(this.childs.size()==0){
+            } else if (this.childs.size() == 0) {
                 this.childs.add(children.get(0));
-            } 
-            else {
-                if (this.childs.size() > 0 &&  this.keys.size()<this.childs.size()) {
+            } else {
+                if (this.childs.size() > 0 && this.keys.size() < this.childs.size()) {
                     this.childs.remove(this.lastindex);
                 }
                 this.childs.add(this.lastindex, children.get(0));
