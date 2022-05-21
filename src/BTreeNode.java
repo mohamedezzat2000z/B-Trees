@@ -97,13 +97,17 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
     @Override
     public void setChildren(List<IBTreeNode<K, V>> children) {
         if (children.size() == 1) {
-            if (children.get(0).getKeys().get(0).compareTo(this.keys.get(this.lastindex)) > 0) {
-                childs.add(this.lastindex + 1, children.get(0));
-            } else {
-                if (childs.size() > 0 && this.numberOfKeys>= keys.size()) {
-                    childs.remove(this.lastindex);
+            if (children.get(0).getKeys().get(0).compareTo(this.keys.get(this.lastindex)) > 0 && childs.size() > 0) {
+                this.childs.add(this.lastindex + 1, children.get(0));
+            }
+            else if(this.childs.size()==0){
+                this.childs.add(children.get(0));
+            } 
+            else {
+                if (this.childs.size() > 0 &&  this.keys.size()<this.childs.size()) {
+                    this.childs.remove(this.lastindex);
                 }
-                childs.add(this.lastindex, children.get(0));
+                this.childs.add(this.lastindex, children.get(0));
             }
         } else if (this.last = true) {
             this.childs.addAll(children);

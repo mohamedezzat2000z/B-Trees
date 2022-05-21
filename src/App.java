@@ -22,8 +22,8 @@ public class App {
          * r.getRank());
          * }
          */
-        // BtreeBenchmark.benchTree(50, "bench 50");
-        SearchEngineBenchmark.benchSearch("is", "is not a sign", "bench is");
+         BtreeBenchmark.benchTree(50, "bench 50");
+        //SearchEngineBenchmark.benchSearch("is", "is not a sign", "bench is");
 
     }
 }
