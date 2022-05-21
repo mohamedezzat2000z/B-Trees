@@ -80,6 +80,7 @@ public class BTreeNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
         if (values.size() == 1) {
             this.value.add(this.lastindex, values.get(0));
         } else if (this.last = true) {
+            System.out.println(last);
             this.value.addAll(values);
         } else {
             List<V> temp = values;

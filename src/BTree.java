@@ -158,7 +158,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         IBTreeNode<K, V> temp = this.root;
         int i = 0;
         Boolean found = false;
-       System.out.println(key + " start");
+       
         while (temp != null && !found) {
             List<K> tempkeys = temp.getKeys();
             for (i = 0; i < tempkeys.size(); i++) {
@@ -179,7 +179,7 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
         }
 
         if (!found) {
-            System.out.println(key +" right place");
+           
             return false;
         }
         
@@ -189,7 +189,6 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
 
             if (temp.isLeaf()) {
                 if (!removed) {
-                    System.out.println(key +" right place");
                     List<K> tempkeys = temp.getKeys();
                     tempkeys.remove(i);
                     List<V> tempval = temp.getValues();
@@ -213,7 +212,6 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                     }
                     // borrow from the left sibling
                     if (x > 0 && holder.get(x - 1).getNumOfKeys() > degree - 1) {
-                        System.out.println(temp.getNumOfKeys()+ "   " + temp.getChildren().size());
                         List<K> put = new ArrayList<>();
                         put.add(tempkeys2.get(x - 1));
                         List<V> putV = new ArrayList<>();
@@ -232,12 +230,9 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                         tempval3.remove(tempval3.size() - 1);
                         temp2.setKeys(put);
                         temp2.setValues(putV);
-                        System.out.println(temp.getNumOfKeys()+ "   " + temp.getChildren().size());
                     }
                     // borrow from the right sibling
                     else if (x < holder.size() - 1 && holder.get(x + 1).getNumOfKeys() > degree - 1) {
-                        System.out.println(temp.getNumOfKeys()+ "   " + temp.getChildren().size());
-                   
                         List<K> put = new ArrayList<>();
                         put.add(tempkeys2.get(x));
                         List<V> putV = new ArrayList<>();
@@ -256,13 +251,11 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                         tempval3.remove(0);
                         temp2.setKeys(put);
                         temp2.setValues(putV);
-                        System.out.println(temp.getNumOfKeys()+ "   " + temp.getChildren().size());
                     }
                     // merge case
                     else {
                         // merge with left siblling
                         if (x > 0) {
-                            System.out.println("merge point left");
                             List<K> put = new ArrayList<>();
                             put.add(tempkeys2.get(x - 1));
                             List<V> putV = new ArrayList<>();
@@ -275,10 +268,13 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                             temp.setValues(holder.get(x - 1).getValues());
                             temp.setChildren(holder.get(x - 1).getChildren());
                             holder.remove(x - 1);
+                            if(temp2==this.root && temp2.getNumOfKeys()==0){
+                                transver.pop();
+                                this.root=temp;
+                            }
                         }
                         // merge with right siblling
                         else if (x < holder.size() - 1) {
-                            System.out.println("merge point right");
                             List<K> put = new ArrayList<>();
                             put.add(tempkeys2.get(x));
                             List<V> putV = new ArrayList<>();
@@ -291,6 +287,10 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                             temp.setValues(holder.get(x+1).getValues());
                             temp.setChildren(holder.get(x+1).getChildren());
                             holder.remove(x + 1);
+                            if(temp2==this.root && temp2.getNumOfKeys()==0){
+                                transver.pop();
+                                this.root=temp;
+                            }
                         }
                     }
 
@@ -344,8 +344,6 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                     }
                     // borrow from the left sibling
                     if (x > 0 && holder.get(x - 1).getNumOfKeys() > degree - 1) {
-                        System.out.println(key + "  boorw left");
-                        System.out.println(temp.getNumOfKeys()+ "   " + temp.getChildren().size());
                         List<K> put = new ArrayList<>();
                         put.add(tempkeys2.get(x - 1));
                         List<V> putV = new ArrayList<>();
@@ -369,13 +367,10 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                         temp2.setValues(putV);
                         putC.add(holder2.get(holder2.size() - 1));
                         temp.setChildren(putC);
-                        holder2.remove(holder2.size() - 1);
-                        System.out.println(temp.getNumOfKeys()+ "   " + temp.getChildren().size());
+                        holder2.remove(holder2.size() - 1); 
                     }
                     // borrow from the right sibling
                     else if (x < holder.size() - 1 && holder.get(x + 1).getNumOfKeys() > degree - 1) {
-                        System.out.println(key + "boorw right");
-                        System.out.println(temp.getNumOfKeys()+ "   " + temp.getChildren().size());
                         List<K> put = new ArrayList<>();
                         put.add(tempkeys2.get(x));
                         List<V> putV = new ArrayList<>();
@@ -400,12 +395,9 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                         putC.add(holder2.get(0));
                         temp.setChildren(putC);
                         holder2.remove(0);
-                        System.out.println(temp.getNumOfKeys()+ "   " + temp.getChildren().size());
-
                     }
                     // merge case
                     else {
-                        System.out.println(key + "mergeing");
                         // temp = null;
                         // merge with left siblling
                         if (x > 0) {
@@ -421,6 +413,10 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                             temp.setValues(holder.get(x - 1).getValues());
                             temp.setChildren(holder.get(x - 1).getChildren());
                             holder.remove(x - 1);
+                            if(temp2==this.root && temp2.getNumOfKeys()==0){
+                                transver.pop();
+                                this.root=temp;
+                            }
                         }
                         // merge with left siblling
                         else if (x < holder.size() - 1) {
@@ -436,6 +432,10 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                             temp.setValues(holder.get(x+1).getValues());
                             temp.setChildren(holder.get(x+1).getChildren());
                             holder.remove(x + 1);
+                            if(temp2==this.root && temp2.getNumOfKeys()==0){
+                                transver.pop();
+                                this.root=temp;
+                            }
                         }
 
                     }
@@ -445,10 +445,6 @@ public class BTree<K extends Comparable<K>, V> implements IBTree<K, V> {
                     } else {
                         temp = null;
                     }
-
-                   /* System.out
-                            .println(key + "special2" + temp.getNumOfKeys() + " number of" + temp.getChildren().size());
-                    System.out.println(temp2.getNumOfKeys() + " number of" + temp2.getChildren().size());*/
                 } else {
                     temp = null;
                 }
